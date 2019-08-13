@@ -7,9 +7,11 @@ module.exports = {
             return res.json("Nenhum arquivo enviado");
         }
 
-        if (file.originalname.includes(".xls") || file.originalname.includes(".xlsx")) {
-            return res.json("Formato de arquivo inválido");
-        }
+        var csvFile = await req.files.filter(file => {
+            if (file.originalname.includes(".xls") || file.originalname.includes(".xlsx")) {
+                return res.json("Formato de arquivo inválido");
+            }
+        });
 
         if (req.files.length != 1) {
             return res.json("Você não pode enviar mais de um arquivo");
