@@ -75,7 +75,7 @@ export default class Units extends Component {
                     </Dropzone>
                 </div>
                 <div id="buttons" className="row">
-                    <a href="/" className="btn btn-info col-md-2" style={backButton}>Voltar</a>
+                    <a href="/condominiums" className="btn btn-info col-md-2" style={backButton}>Voltar</a>
                     <a href="/charges" hidden onClick={this.deleteFile} className="btn btn-danger" style={backButton}>Deletar arquivo</a>
                     {(this.state.hasError) ?
                         <div className="alert alert-danger row">{this.state.errorMsg}</div>

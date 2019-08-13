@@ -18,10 +18,14 @@ module.exports = {
             if (file.originalname.includes(".csv")) {
                 return file;
             }
+
+            if (file.originalname.includes(".xls") || file.originalname.includes(".xlsx")) {
+                return res.json("Formato de arquivo inválido");
+            }
         });
 
         var options = {
-            root: '/home/bruno/Desktop/projetos/conversorCsv/backend/src/files/output/',
+            root: './src/files/output/',
             dotfiles: 'deny',
             headers: {
                 'x-timestamp': Date.now(),
@@ -75,7 +79,7 @@ async function readFile(filePath, categoryTxt) {
         });
 }
 
-async function processarCsv (fileContent, categoryTxt) {
+async function processarCsv(fileContent, categoryTxt) {
     let csvOutput = [];
     let fileName;
 
@@ -99,7 +103,7 @@ async function processarCsv (fileContent, categoryTxt) {
         csvOutput.push(lineOutput);
     }
 
-    await fs.writeFile('./src/files/output/exemploCobranca.csv', await convertToCsv(csvOutput),{enconding:'utf-8',flag: 'w+'}, function (err) {
+    await fs.writeFile('./src/files/output/exemploCobranca.csv', await convertToCsv(csvOutput),{enconding:'latin1',flag: 'w+'}, function (err) {
         if (err) throw err;
         console.log('Arquivo salvo!');
     });

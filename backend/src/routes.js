@@ -5,6 +5,9 @@ const routes = express.Router();
 
 const ChargesController = require('./controllers/ChargesController');
 const UnitsController = require('./controllers/UnitsController');
+// const UnitsController = require('./controllers/ColumnsController');
+
+routes.post('/uploadCharges', upload.any(), ChargesController.sendCharges);
 
 routes.post('/uploadCharges', upload.any(), ChargesController.sendCharges);
 routes.post('/charges:delete', ChargesController.clearFiles);

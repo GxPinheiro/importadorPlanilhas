@@ -7,6 +7,10 @@ module.exports = {
             return res.json("Nenhum arquivo enviado");
         }
 
+        if (file.originalname.includes(".xls") || file.originalname.includes(".xlsx")) {
+            return res.json("Formato de arquivo inválido");
+        }
+
         if (req.files.length != 1) {
             return res.json("Você não pode enviar mais de um arquivo");
         }
@@ -18,7 +22,7 @@ module.exports = {
         });
 
         var options = {
-            root: '/home/bruno/Desktop/projetos/conversorCsv/backend/src/files/output/',
+            root: './src/files/output/',
             dotfiles: 'deny',
             headers: {
                 'x-timestamp': Date.now(),
@@ -55,16 +59,16 @@ function processarCsv (results) {
             unidade: line['apart_apto'],
             fração: line['apart_fracao'],
 
-            proprietário_nome: line['propriet_nome'],
-            proprietário_endereço: line['propriet_endereco'],
-            proprietário_bairro: line['propriet_bairro'],
-            proprietário_cep: line['propriet_cep'],
-            proprietário_cidade: line['propriet_cidade'],
-            proprietário_telefone: joinTwoDatas(line['propriet_fonec'], line['propriet_foner']),
-            proprietário_estado: line['propriet_celular'],
-            proprietário_email: joinTwoDatas(line['propriet_mail'], line['propriet_mail2']),
-            proprietário_rg: getRg(line['propriet_rg']),
-            proprietário_cpf: line['propriet_doc/cnpj'],
+            proprietario_nome: line['propriet_nome'],
+            proprietario_endereço: line['propriet_endereco'],
+            proprietario_bairro: line['propriet_bairro'],
+            proprietario_cep: getCep(line['propriet_cep']),
+            proprietario_cidade: line['propriet_cidade'],
+            proprietario_telefone: joinTwoDatas(line['propriet_fonec'], line['propriet_foner']),
+            proprietario_estado: line['propriet_celular'],
+            proprietario_email: joinTwoDatas(line['propriet_mail'], line['propriet_mail2']),
+            proprietario_rg: getRg(line['propriet_rg']),
+            proprietario_cpf: line['propriet_doc/cnpj'],
 
             inquilino_nome: line['morador_nome'],
             inquilino_telefone: joinTwoDatas(line['morador_fonec'], line['morador_foner']),
@@ -77,7 +81,7 @@ function processarCsv (results) {
         csvOutput.push(lineOutput);
     });
 
-    fs.writeFile('./src/files/output/exemploUnidade.csv', convertToCsv(csvOutput),{enconding:'utf-8',flag: 'w+'}, function (err) {
+    fs.writeFile('./src/files/output/exemploUnidade.csv', convertToCsv(csvOutput),{enconding:'latin1',flag: 'w+'}, function (err) {
         if (err) throw err;
         console.log('Arquivo salvo!');
     });
@@ -93,14 +97,21 @@ function convertToCsv(data) {
     return csv;
 }
 
+function getCep(cep) {
+    if (!cep) {
+        return '';
+    }
+
+    cep = String(cep);
+    return cep;
+}
+
 function getRg(rg) {
-    // console.log(rg);
     if (!rg) {
         return "";
     }
 
     return rg = rg.replace("RG:", "").replace(" ", "");
-    // .replace(/\./g, "").replace(",", "").replace("-", "") -> Não vai precisar
 }
 
 function joinTwoDatas(field1, field2) {
